@@ -18,18 +18,29 @@ class SpfController extends Controller
 
     //
 
-    public function validateSpf(Request $request){
-        $domain = $request->domain;
+    public function validateSpf($domain){
         $decoder = new \SPFLib\Decoder();
         $originalSpf = $decoder->getRecordFromDomain($domain);
         $record = (new \SPFLib\Decoder())->getRecordFromTXT($originalSpf);
         $issues = (new \SPFLib\SemanticValidator())->validate($record);
         $originalDomainSpfLookUpCount = isset($issues['totalCount']) ? $issues['totalCount'] : false ;
-
+        // return $originalDomainSpfLookUpCount;
         //looking for how many included domains are there.
 
-        return $includeddomains = strstr($originalSpf,"include:");
-        
+        $partsOfSpf = explode(' ', $originalSpf );
+        $includeddomains = [];
+        foreach($partsOfSpf as $key => $part){
+            $includeddomains[] = str_replace('include:','',strstr($part,"include:"));
+            $includeddomains = array_filter($includeddomains);
+            // str_replace('inlcude:','');
+        }
+        //return $includeddomains;
 
+        //running recurssion
+
+    }
+
+    public function validatedOutput(Request $request){
+        return $this->validateSpf($request->domain);
     }
 }

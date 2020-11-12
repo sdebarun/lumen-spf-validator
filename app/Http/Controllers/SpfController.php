@@ -21,7 +21,15 @@ class SpfController extends Controller
     public function validateSpf(Request $request){
         $domain = $request->domain;
         $decoder = new \SPFLib\Decoder();
-        $spf = $decoder->getRecordFromDomain($domain);
-        return $spf;//first spf of the original domain under the test.
+        $originalSpf = $decoder->getRecordFromDomain($domain);
+        $record = (new \SPFLib\Decoder())->getRecordFromTXT($originalSpf);
+        $issues = (new \SPFLib\SemanticValidator())->validate($record);
+        $originalDomainSpfLookUpCount = isset($issues['totalCount']) ? $issues['totalCount'] : false ;
+
+        //looking for how many included domains are there.
+
+        return $includeddomains = strstr($originalSpf,"include:");
+        
+
     }
 }

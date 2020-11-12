@@ -55,3 +55,4 @@ $router->get('check-spf[/{val}]',function($val){
         echo "</pre>";
     }
 });
+$router->get('validate-spf[/{domain}]', 'SpfController@validateSpf');

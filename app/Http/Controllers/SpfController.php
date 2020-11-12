@@ -19,11 +19,12 @@ class SpfController extends Controller
     //
 
     public function validateSpf($domain){
+        //$originalDomainSpfLookUpCount = [];
         $decoder = new \SPFLib\Decoder();
         $originalSpf = $decoder->getRecordFromDomain($domain);
         $record = (new \SPFLib\Decoder())->getRecordFromTXT($originalSpf);
         $issues = (new \SPFLib\SemanticValidator())->validate($record);
-        $originalDomainSpfLookUpCount = isset($issues['totalCount']) ? $issues['totalCount'] : false ;
+        $originalDomainSpfLookUpCount[] = isset($issues['totalCount']) ? $issues['totalCount'] : false ;
         // return $originalDomainSpfLookUpCount;
         //looking for how many included domains are there.
 
@@ -36,11 +37,24 @@ class SpfController extends Controller
         }
         //return $includeddomains;
 
-        //running recurssion
-
+        //running recursion
+        if(count($includeddomains) > 0){
+            foreach($includeddomains as $index => $include){
+                $this->validateSpf($include);
+            }
+        }
+        
+        print_r($originalDomainSpfLookUpCount);
     }
 
     public function validatedOutput(Request $request){
         return $this->validateSpf($request->domain);
     }
+    // public function lookUpCount($domain){
+    //     $decoder = new \SPFLib\Decoder();
+    //     $originalSpf = $decoder->getRecordFromDomain($domain);
+    //     $record = (new \SPFLib\Decoder())->getRecordFromTXT($originalSpf);
+    //     $issues = (new \SPFLib\SemanticValidator())->validate($record);
+    //     $originalDomainSpfLookUpCount = isset($issues['totalCount']) ? $issues['totalCount'] : false ;
+    // }
 }

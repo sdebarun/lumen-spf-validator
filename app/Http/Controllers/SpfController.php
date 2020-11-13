@@ -43,7 +43,9 @@ class SpfController extends Controller
                 $this->validateSpf($include);
             }
         }
-        $filteredarr = array_sum($originalDomainSpfLookUpCount);
+        $filteredarr = array_merge($originalDomainSpfLookUpCount);
+        
+        
         echo "<pre>";
         print_r($filteredarr);
         echo "</pre>";

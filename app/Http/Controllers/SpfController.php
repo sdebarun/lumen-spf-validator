@@ -35,20 +35,24 @@ class SpfController extends Controller
             $includeddomains = array_filter($includeddomains);
             // str_replace('inlcude:','');
         }
-        //return $includeddomains;
-
+        // return $includeddomains;
+        return $includeddomains;
         //running recursion
         if(count($includeddomains) > 0){
             foreach($includeddomains as $index => $include){
-                $this->validateSpf($include);
+              echo $this->validateSpf($include);
+               
             }
+        }else{
+            echo 1;
         }
-        $filteredarr = array_merge($originalDomainSpfLookUpCount);
         
         
-        echo "<pre>";
-        print_r($filteredarr);
-        echo "</pre>";
+        
+        // echo "<pre>";
+        // print_r($originalDomainSpfLookUpCount[0]);
+        // echo "</pre>";
+     //   yield $originalDomainSpfLookUpCount[0];
     }
 
     public function validatedOutput(Request $request){

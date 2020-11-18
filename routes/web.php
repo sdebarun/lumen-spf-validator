@@ -56,21 +56,4 @@ $router->get('check-spf[/{val}]', function ($val) {
     }
 });
 $router->get('validate-spf[/{domain}]', 'SpfController@validatedOutput');
-$router->get('spf[/{domain}]', function ($domain) {
-    $decoder = new \SPFLib\Decoder();
-    $spf = $decoder->getRecordFromDomain($domain);
-    $validator = new \SPFLib\OnlineSemanticValidator();
-    // Check an online domain
-    //$issues = $validator->validateDomain($domain);
-    // Check a raw SPF record
-    $issues = $validator->validateRawRecord($spf);
-    // Check an SPFLib\Record instance ($record in this case)
-    //$issues = $validator->validateRecord($spf);
-  
-    foreach ($issues as $issue) {
-        echo"<pre>";
-        //echo (string) $issue, "\n";
-        echo wordwrap((string) $issue,150,"<br>\n");
-        echo "</pre>";
-    }
-});
+$router->get('spf[/{domain}]','SpfValidatorController@spfValidation' );

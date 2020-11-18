@@ -11,11 +11,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <div class="container">
- <h3>Result for {{ app('request')->domain }}</h3>
- <hr>
-@foreach($spf as $key => $data)
+    <h3>Result for {{ app('request')->domain }}</h3>
+    <hr>
+    @foreach($spf as $key => $data)
     <p>{{$data}}</p>
-@endforeach
+    @endforeach
 </div>
 
 

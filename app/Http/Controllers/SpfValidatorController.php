@@ -25,12 +25,13 @@ class SpfValidatorController extends Controller
         $issues = $validator->validateRawRecord($spf);
         // Check an SPFLib\Record instance ($record in this case)
         //$issues = $validator->validateRecord($spf);
-
+        $validationReport = [];
         foreach ($issues as $issue) {
-            echo "<pre>";
-            //echo (string) $issue, "\n";
-            echo wordwrap((string) $issue, 150, "<br>\n");
-            echo "</pre>";
+            //echo "<pre>";
+            $validationReport = (string) $issue;
+            // echo wordwrap((string) $issue, 150, "<br>\n");
+           // echo "</pre>";
         }
+        return response()->json($validationReport);
     }
 }

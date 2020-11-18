@@ -28,10 +28,10 @@ class SpfValidatorController extends Controller
         $validationReport = [];
         foreach ($issues as $issue) {
             //echo "<pre>";
-            $validationReport = (string) $issue;
+            $validationReport['spf'][] = (string) $issue;
             // echo wordwrap((string) $issue, 150, "<br>\n");
            // echo "</pre>";
         }
-        return response()->json($validationReport);
+        return view('spf',$validationReport);
     }
 }

@@ -14,9 +14,14 @@
 <div class="container">
     <h3>Result for {{ app('request')->domain }}</h3>
     <hr>
+    @isset($spf)
     @foreach($spf as $key => $data)
     <p>{{$data}}</p>
     @endforeach
+    @endisset
+    @if(!isset($spf))
+        <p>Looks ok</p>
+    @endif    
 </div>
 
 

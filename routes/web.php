@@ -68,6 +68,9 @@ $router->get('spf[/{domain}]', function ($domain) {
     //$issues = $validator->validateRecord($spf);
   
     foreach ($issues as $issue) {
-        echo (string) $issue, "\n";
+        echo"<pre>";
+        //echo (string) $issue, "\n";
+        echo wordwrap((string) $issue,150,"<br>\n");
+        echo "</pre>";
     }
 });

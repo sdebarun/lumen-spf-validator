@@ -16,24 +16,24 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-$router->get('check-spf[/{val}]',function($val){
+$router->get('check-spf[/{val}]', function ($val) {
     $decoder = new \SPFLib\Decoder();
     echo $spf = $decoder->getRecordFromDomain($val); // getting the spf string form the domain name
     echo "<br/> <hr/>";
     // $spf = 'v=spf1 a mx include:d1.com include:d2.com include:d3.com include:d4.com include:d5.com include:d6.com include:d7.com include:d8.com redirect=foo.bar';
     $record = (new \SPFLib\Decoder())->getRecordFromTXT($spf); // returing spf string
     // getting the includes
-    $exploded = explode(' ',$record);
+    $exploded = explode(' ', $record);
     echo "<pre>";
     print_r($exploded);
     echo "</pre>";
     // looking for the included domain names
-    foreach($exploded as $key => $stringPart){
-        $includeddomains = strstr($stringPart,"include:");
+    foreach ($exploded as $key => $stringPart) {
+        $includeddomains = strstr($stringPart, "include:");
         echo "<pre>";
         //echo "next - ";
         print_r($includeddomains);
-        foreach (explode(":",$includeddomains) as  $domainName){
+        foreach (explode(":", $includeddomains) as  $domainName) {
             echo "<br/>domain - ";
             echo $nextLevelSpfTxt =  $domainName != "include" ? $domainName : '';
             // $nextLevelText = $decoder->getRecordFromDomain($nextLevelSpfTxt);
@@ -47,7 +47,7 @@ $router->get('check-spf[/{val}]',function($val){
         }
         echo "</pre>";
     }
-    
+
     $issues = (new \SPFLib\SemanticValidator())->validate($record);
     foreach ($issues as $issue) {
         echo "<pre>";
@@ -56,3 +56,18 @@ $router->get('check-spf[/{val}]',function($val){
     }
 });
 $router->get('validate-spf[/{domain}]', 'SpfController@validatedOutput');
+$router->get('spf[/{domain}]', function ($domain) {
+    $decoder = new \SPFLib\Decoder();
+    $spf = $decoder->getRecordFromDomain($domain);
+    $validator = new \SPFLib\OnlineSemanticValidator();
+    // Check an online domain
+    //$issues = $validator->validateDomain($domain);
+    // Check a raw SPF record
+    $issues = $validator->validateRawRecord($spf);
+    // Check an SPFLib\Record instance ($record in this case)
+    //$issues = $validator->validateRecord($spf);
+  
+    foreach ($issues as $issue) {
+        echo (string) $issue, "\n";
+    }
+});
